@@ -10,7 +10,7 @@ import Core
 import RealmSwift
 
 public struct UserTransformer: Mapper {
-   
+
 
     public typealias Request = Any
     public typealias Response = UserResponse
@@ -143,14 +143,7 @@ public struct UserTransformer: Mapper {
         )
     }
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    public func transformResponseToDomain(request: Request?, response: UserResponse) -> UserModel {
+        fatalError()
+    }
 }
