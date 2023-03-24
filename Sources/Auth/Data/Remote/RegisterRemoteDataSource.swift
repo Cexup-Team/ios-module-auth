@@ -2,7 +2,7 @@
 //  File.swift
 //  
 //
-//  Created by Iqbal Nur Haq on 09/01/23.
+//  Created by Iqbal Nur Haq on 29/01/23.
 //
 
 import Foundation
@@ -10,11 +10,11 @@ import Combine
 import Alamofire
 import Core
 
-public struct LoginRemoteDataSource: DataSource {
+public struct RegisterRemoteDataSource: DataSource {
    
     
     public typealias Request = Any
-    public typealias Response = UserResponse
+    public typealias Response = Bool
     
     private let _endpoint: String
     private let _apiKey: String
@@ -24,30 +24,24 @@ public struct LoginRemoteDataSource: DataSource {
         _apiKey = apiKey
     }
     
-    public func execute(request: Any?) -> AnyPublisher<UserResponse, Error> {
+    public func execute(request: Any?) -> AnyPublisher<Bool, Error> {
     
         
         let headers: HTTPHeaders = [
             "x-api-key" : _apiKey
         ]
         
-        return Future<UserResponse, Error> { completion in
+        return Future<Bool, Error> { completion in
             if let url = URL(string: _endpoint) {
                 AF.request(url, method: .post, parameters: request as? Parameters, encoding: JSONEncoding.default, headers: headers)
                     .responseDecodable(of: LoginResponse.self) { response in
+                        print(response)
+                        print(request)
                         switch response.result {
                         case .success(let value):
                             print(value)
-                            if Int(value.code) == 200 {
-                                Prefs.shared.accessTokenPrefs = value.data!.access_token!
-                                Prefs.shared.userCodePrefs = value.data!.user!.user_code!
-                                
-                                if value.data!.user!.role == "doctor" {
-                                    Prefs.shared.doctorIdPrefs = value.data!.user!.doctor_id!
-                                    Prefs.shared.doctorHospitalIdPrefs = value.data!.user!.hospital_active!.doctor_hospital_id!
-                                }
-                               
-                                completion(.success(value.data!.user!))
+                            if  200 ... 299 ~= Int(value.code)!{
+                                completion(.success(true))
                             }else{
                                 completion(.failure(URLError.custom(value.message)))
                             }
