@@ -34,9 +34,7 @@ public struct RegisterRemoteDataSource: DataSource {
         return Future<Bool, Error> { completion in
             if let url = URL(string: _endpoint) {
                 AF.request(url, method: .post, parameters: request as? Parameters, encoding: JSONEncoding.default, headers: headers)
-                    .responseDecodable(of: LoginResponse.self) { response in
-                        print(response)
-                        print(request)
+                    .responseDecodable(of: AuthResponse.self) { response in
                         switch response.result {
                         case .success(let value):
                             print(value)
@@ -45,7 +43,7 @@ public struct RegisterRemoteDataSource: DataSource {
                             }else{
                                 completion(.failure(URLError.custom(value.message)))
                             }
-                            
+
                         case .failure(_):
                             completion(.failure(URLError.invalidRequest))
                         }

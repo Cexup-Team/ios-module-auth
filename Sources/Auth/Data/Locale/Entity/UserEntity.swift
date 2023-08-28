@@ -19,8 +19,8 @@ public class UserEntity: Object {
     @Persisted var doctor_id: String?
     @Persisted var speciality_id: Int?
     @Persisted var speciality_slug: String?
-//    @Persisted var hospital: [Str]
-    @Persisted var hospital_active: UserHospitalEntity?
+    @Persisted var hospital: List<HospitalEntity>
+    @Persisted var hospital_active: HospitalEntity?
     @Persisted var name: String?
     @Persisted var username: String?
     @Persisted var gender: String?
@@ -66,7 +66,7 @@ public class UserEntity: Object {
     @Persisted var thumb: String?
 }
 
-public class UserHospitalEntity: EmbeddedObject {
+public class HospitalEntity: EmbeddedObject {
     @Persisted var name: String?
     @Persisted var doctor_hospital_id: Int?
 }

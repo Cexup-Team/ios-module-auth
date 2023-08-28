@@ -19,7 +19,6 @@ public struct CompleteProfileResponse: Decodable {
     let success: Bool
     let message: String
     let data: CompleteProfileDataResponse?
-    
 }
 
 
@@ -31,10 +30,10 @@ public struct CompleteProfileDataResponse: Decodable {
         case type
         case no_type
         case doctor_id
-//        case speciality_id
+        case speciality_id
         case speciality_slug
-//        case hospital
-//        case hospital_active
+        case hospital
+        case hospital_active
         case name
         case username
         case gender
@@ -71,7 +70,7 @@ public struct CompleteProfileDataResponse: Decodable {
         case current_postal_code
         case current_rt
         case current_rw
-        //          case obgyn
+        case obgyn
         case current_disease_name
         case updated_at_current_disease
         case current_ews
@@ -79,17 +78,17 @@ public struct CompleteProfileDataResponse: Decodable {
         case created_at
         case thumb
     }
-    
+
     let user_id: String?
     let user_code: String?
     let role: String
     let type: String?
     let no_type: String?
     let doctor_id: String?
-//    let speciality_id: null
+    let speciality_id: Int?
     let speciality_slug: String?
-    //        let hospital: []
-    //        let hospital_active: null
+    let hospital: [HospitalResponse]
+    let hospital_active: HospitalResponse?
     let name: String?
     let username: String?
     let gender: String?
@@ -126,7 +125,7 @@ public struct CompleteProfileDataResponse: Decodable {
     let current_postal_code: String?
     let current_rt: String?
     let current_rw: String?
-    //          let obgyn: null
+    let obgyn: String?
     let current_disease_name: String?
     let updated_at_current_disease: String?
     let current_ews: String?
@@ -134,6 +133,16 @@ public struct CompleteProfileDataResponse: Decodable {
     let created_at: String?
     let thumb: String?
 }
+//
+//public struct HospitalDataResponse: Decodable {
+//    private enum CodingKeys: String, CodingKey {
+//        case name
+//        case doctor_hospital_id
+//    }
+//
+//    let name: String?
+//    let doctor_hospital_id: Int?
+//}
 
 
 

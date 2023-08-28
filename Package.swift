@@ -15,10 +15,9 @@ let package = Package(
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
+        .package(name: "Core", url: "https://github.com/Cexup-Team/ios-module-core.git", from: "1.2.0"),
         .package(name: "Realm", url: "https://github.com/realm/realm-cocoa.git", from: "10.5.2"),
         .package(url: "https://github.com/Alamofire/Alamofire.git", .upToNextMajor(from: "5.6.4")),
-        .package(name: "Core", url: "https://github.com/Cexup-Team/ios-module-core.git", from: "1.2.0")
-//        .package(name: "Core", url: "https://github.com/Cexup-Team/ios-module-core")
         
     ],
     targets: [

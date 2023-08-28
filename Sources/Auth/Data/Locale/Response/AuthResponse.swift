@@ -7,8 +7,7 @@
 
 import Foundation
 
-
-public struct LoginResponse: Decodable {
+public struct AuthResponse: Decodable {
     private enum CodingKeys: String, CodingKey {
         case code
         case success
@@ -19,11 +18,11 @@ public struct LoginResponse: Decodable {
     let code: String
     let success: Bool
     let message: String
-    let data: DataLoginResponse?
+    let data: AuthDataResponse?
     
 }
 
-public struct DataLoginResponse: Decodable {
+public struct AuthDataResponse: Decodable {
     private enum CodingKeys: String, CodingKey {
         case user
         case access_token
@@ -33,7 +32,7 @@ public struct DataLoginResponse: Decodable {
     let access_token: String?
 }
 
-public struct UserHospital: Decodable {
+public struct HospitalResponse: Decodable {
     private enum CodingKeys: String, CodingKey {
         case name
         case doctor_hospital_id
@@ -53,7 +52,7 @@ public struct UserResponse: Decodable {
         case doctor_id
         case speciality_id
         case speciality_slug
-//        case hospital
+        case hospital
         case hospital_active
         case name
         case username
@@ -108,8 +107,8 @@ public struct UserResponse: Decodable {
     let doctor_id: String?
     let speciality_id: Int?
     let speciality_slug: String?
-//    let hospital: [UserHospital]?
-    let hospital_active: UserHospital?
+    let hospital: [HospitalResponse]
+    let hospital_active: HospitalResponse?
     let name: String?
     let username: String?
     let gender: String?

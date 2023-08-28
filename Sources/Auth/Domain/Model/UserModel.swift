@@ -16,8 +16,8 @@ public struct UserModel: Equatable {
     public let doctor_id: String?
     public let speciality_id: Int?
     public let speciality_slug: String?
-//    public let hospital: [String]?
-    public let hospital_active: UserHospitalModel?
+    public let hospital: [HospitalModel]?
+    public let hospital_active: HospitalModel?
     public let name: String?
     public let username: String?
     public let gender: String?
@@ -63,7 +63,7 @@ public struct UserModel: Equatable {
     public let thumb: String?
 }
 
-public struct UserHospitalModel: Equatable {
+public struct HospitalModel: Equatable {
     public let name: String?
     public let doctor_hospital_id: Int?
 }

@@ -21,21 +21,33 @@ public struct UserTransformer: Mapper {
     
     public func transformResponseToEntity(request: Any?, response: UserResponse) -> UserEntity {
         let userEntity = UserEntity()
-        let userHospitalEntity = UserHospitalEntity()
         
-        userHospitalEntity.name = response.hospital_active?.name
-        userHospitalEntity.doctor_hospital_id = response.hospital_active?.doctor_hospital_id
+        let userHospitalEntity = List<HospitalEntity>()
+        let hospitalActiveEntity = HospitalEntity()
+        
+        
+        hospitalActiveEntity.name = response.hospital_active?.name
+        hospitalActiveEntity.doctor_hospital_id = response.hospital_active?.doctor_hospital_id
+        
+        for (_, item) in response.hospital.enumerated() {
+            let hospitalEntity = HospitalEntity()
+            
+            hospitalEntity.name = item.name
+            hospitalEntity.doctor_hospital_id = item.doctor_hospital_id
+            
+            userHospitalEntity.append(hospitalEntity)
+        }
         
         userEntity.user_id = response.user_id
-         userEntity.user_code = response.user_code
-         userEntity.role = response.role
+        userEntity.user_code = response.user_code
+        userEntity.role = response.role
         userEntity.type = response.type
         userEntity.no_type = response.no_type
         userEntity.doctor_id = response.doctor_id
         userEntity.speciality_id = response.speciality_id
         userEntity.speciality_slug = response.speciality_slug
-    //     userEntity.hospital: [Str]
-        userEntity.hospital_active = userHospitalEntity
+        userEntity.hospital = userHospitalEntity
+        userEntity.hospital_active = hospitalActiveEntity
         userEntity.name = response.name
         userEntity.username = response.username
         userEntity.gender = response.gender
@@ -86,6 +98,12 @@ public struct UserTransformer: Mapper {
     
     public func transformEntityToDomain(entity: UserEntity) -> UserModel {
         
+        var hospitalModel = [HospitalModel]()
+        
+        for (_, item) in entity.hospital.enumerated() {
+            hospitalModel.append(HospitalModel(name: item.name, doctor_hospital_id: item.doctor_hospital_id))
+        }
+        
         return UserModel(
             user_id: entity.user_id ?? "",
             user_code: entity.user_code ?? "",
@@ -95,8 +113,8 @@ public struct UserTransformer: Mapper {
             doctor_id: entity.doctor_id ?? "",
             speciality_id: entity.speciality_id ?? 0,
             speciality_slug: entity.speciality_slug ?? "",
-//                hospital: entity.hospital ?? [],
-            hospital_active: UserHospitalModel(name: entity.hospital_active?.name ?? "", doctor_hospital_id: entity.hospital_active?.doctor_hospital_id ?? 0),
+            hospital: hospitalModel,
+            hospital_active: HospitalModel(name: entity.hospital_active?.name ?? "", doctor_hospital_id: entity.hospital_active?.doctor_hospital_id ?? 0),
             name: entity.name ?? "",
             username: entity.username ?? "",
             gender: entity.gender ?? "",
@@ -129,7 +147,7 @@ public struct UserTransformer: Mapper {
             current_villages_id: entity.current_villages_id ?? "",
             current_villages_name: entity.current_villages_name ?? "",
             current_districts_id: entity.current_districts_id ?? "",
-            current_districts_name: entity.current_disease_name ?? "",
+            current_districts_name: entity.current_districts_name ?? "",
             current_postal_code: entity.current_postal_code ?? "",
             current_rt: entity.current_rt ?? "",
             current_rw: entity.current_rw ?? "",

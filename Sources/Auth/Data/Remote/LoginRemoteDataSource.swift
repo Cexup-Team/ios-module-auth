@@ -34,13 +34,14 @@ public struct LoginRemoteDataSource: DataSource {
         return Future<UserResponse, Error> { completion in
             if let url = URL(string: _endpoint) {
                 AF.request(url, method: .post, parameters: request as? Parameters, encoding: JSONEncoding.default, headers: headers)
-                    .responseDecodable(of: LoginResponse.self) { response in
+                    .responseDecodable(of: AuthResponse.self) { response in
                         switch response.result {
                         case .success(let value):
-                            print(value)
                             if Int(value.code) == 200 {
                                 Prefs.shared.accessTokenPrefs = value.data!.access_token!
+                                Prefs.shared.userIdPrefs = value.data!.user!.user_id!
                                 Prefs.shared.userCodePrefs = value.data!.user!.user_code!
+                                Prefs.shared.noTypePrefs = value.data!.user!.no_type ?? ""
                                 
                                 if value.data!.user!.role == "doctor" {
                                     Prefs.shared.doctorIdPrefs = value.data!.user!.doctor_id!
