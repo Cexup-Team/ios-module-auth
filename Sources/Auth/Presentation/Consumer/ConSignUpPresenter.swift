@@ -10,14 +10,17 @@ import Combine
 import Core
 
 
-public class ConSignUpPresenter<UserUseCase: UseCase>: ObservableObject
+public class ConSignUpPresenter<UserUseCase: UseCase, DelAccUseCase: UseCase>: ObservableObject
 where
 UserUseCase.Request == Any,
-UserUseCase.Response == Bool
+UserUseCase.Response == Bool,
+DelAccUseCase.Request == Any,
+DelAccUseCase.Response == Bool
 {
     private var cancellables: Set<AnyCancellable> = []
     
     private let _userUseCase: UserUseCase
+    private let _delAccUseCase: DelAccUseCase
     
     @Published public var item: Bool = false
     @Published public var errorMessage: String = ""
@@ -28,6 +31,14 @@ UserUseCase.Response == Bool
     @Published public var isValidForm: Bool = false
     @Published public var selectionSignUp: Int? = nil
     @Published public var showSignUp: Bool = false
+    
+    
+    @Published public var delAccItem: Bool?
+    @Published public var delAccAction: Bool?
+    @Published public var delAccErrorMessage: String = ""
+    @Published public var delAccIsLoading: Bool = false
+    @Published public var delAccIsSuccess: Bool = false
+    @Published public var delAccIsError: Bool = false
     
     @Published public var genderItem = [
         slcItemModel(id: 1, name: "Male"),
@@ -214,9 +225,11 @@ UserUseCase.Response == Bool
     
     
     public init(
-        userUseCase: UserUseCase
+        userUseCase: UserUseCase,
+        delAccUseCase: DelAccUseCase
     ){
         _userUseCase = userUseCase
+        _delAccUseCase = delAccUseCase
         
         isFilterDateOfBirth
             .receive(on: RunLoop.main)
@@ -300,6 +313,33 @@ UserUseCase.Response == Bool
             })
             .store(in: &cancellables)
     }
+    
+    
+    public func delAcc(request: DelAccUseCase.Request) {
+        delAccIsLoading = true
+        delAccIsError = false
+        delAccIsSuccess = false
+        
+        _delAccUseCase.execute(request: request)
+            .receive(on: RunLoop.main)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .failure(let error):
+                    self.delAccErrorMessage = error.localizedDescription
+                    self.delAccIsError = true
+                    self.delAccIsLoading = false
+                    self.delAccAction = false
+                case .finished:
+                    self.delAccIsSuccess = true
+                    self.delAccIsLoading = false
+                }
+            }, receiveValue: { item in
+                self.delAccItem = item
+                self.delAccAction = true
+            })
+            .store(in: &cancellables)
+    }
+
         
 }
 

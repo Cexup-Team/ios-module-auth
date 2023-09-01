@@ -27,7 +27,8 @@ public struct DeleteAccountRemoteDataSource: DataSource {
     
         
         let headers: HTTPHeaders = [
-            "x-api-key" : _apiKey
+            "x-api-key" : _apiKey,
+            "Authorization" : "Bearer \(Prefs.shared.accessTokenPrefs)"
         ]
         
         return Future<Bool, Error> { completion in
@@ -36,6 +37,7 @@ public struct DeleteAccountRemoteDataSource: DataSource {
                     .responseDecodable(of: AuthResponse.self) { response in
                         switch response.result {
                         case .success(let value):
+                            if Int(value.code) == 200 {
                                 completion(.success(value.success))
                             }else{
                                 completion(.failure(URLError.custom(value.message)))
